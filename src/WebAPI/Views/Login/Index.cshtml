@@ -1,0 +1,54 @@
+<html>
+
+<head>
+    <title>Login</title>
+    <link href="~/css/custom.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="login">
+        <h1>Login</h1>
+        <form id="loginForm">
+            <input id="email" type="text" placeholder="email" />
+            <input id="password" type="password" placeholder="Password" />
+            <button type="submit" class="btn btn-primary btn-block btn-large">Login</button>
+        </form>
+    </div>
+
+    <script src="~/js/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            document.cookie = "token=";
+
+            $("#loginForm").submit(function (event) {
+                event.preventDefault();
+
+                $.ajax({
+                    type: "POST",
+                    url: "api/Auth/Login",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        Email: $('#email').val(),
+                        Password: $('#password').val()
+                    }),
+                    success: function (data) {
+						if (data.success == true)
+						{
+							document.cookie = "token=" + data.data.token;
+							location.href = 'Swagger/ReDoc';
+						}
+						else
+							alert(data.message);
+                    },
+                    error: function (data) {
+                        alert(data.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
